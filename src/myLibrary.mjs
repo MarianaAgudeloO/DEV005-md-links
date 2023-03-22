@@ -4,9 +4,12 @@ import { promises as fs } from 'fs';
 import path from 'path';
 // Se importa el módulo axios para hacer peticiones HTTP
 import axios from 'axios';
+// Se importa el módulo marked para hacer cambio de markdown a HTML
 import { marked } from 'marked';
+// Se importa el módulo cheerio para crear documento virtual
 import { load } from 'cheerio';
 
+//Extraer los links del archivo markdown
 function extractLinksFromFile(filePath, options) {
   // Leer el contenido del archivo en la ruta especificada
   return fs.readFile(filePath, 'utf8')
@@ -29,23 +32,10 @@ function extractLinksFromFile(filePath, options) {
           text: link.text,
           file: filePath
         }));
-      } else {
+      } 
+      else if ((options.validate && !options.stats)||(options.validate && options.stats)) {
         const linkPromises = links.map(link => {
-          return axios.head(link.href)
-            .then(response => ({
-              href: link.href,
-              text: link.text,
-              file: filePath,
-              status: response.status,
-              ok: response.status >= 200 && response.status < 300 ? 'ok' : 'fail'
-            }))
-            .catch(error => ({
-              href: link.href,
-              text: link.text,
-              file: filePath,
-              status: error.response ? error.response.status : 'unknown',
-              ok: 'fail'
-            }));
+          return validateLinks(link, filePath);
         });
         return Promise.all(linkPromises);
       }
@@ -73,21 +63,59 @@ function extractLinksFromDirectory(directoryPath, validate) {
     });
 }
 
-// Se recibe como argumento la ruta de un archivo o directorio y se extraen todos los enlaces presentes en el archivo Markdown, o en el caso de que sea un directorio, se ejecuta la función extractLinksFromDirectory.
-function mdLinks(firstPath, options = { validate: false }) {
-  const absolutePath = path.resolve(process.cwd(), firstPath);
-  return fs.stat(absolutePath)
-  .then(stats => {
-    if (stats.isDirectory()) {
-      return extractLinksFromDirectory(absolutePath, options);
-    } else if (stats.isFile() && path.extname(absolutePath) === '.md') {
-      return extractLinksFromFile(absolutePath, options);
-    } else{
-      // Si la ruta no es ni un archivo Markdown ni un directorio, se lanza un error.
-      throw new Error('La ruta debe ser un archivo Markdown o un directorio.');
-    }
-  });
+//Validar el estado de los links encontrados
+function validateLinks(link, filePath){
+
+  return axios.head(link.href)
+            .then(response => ({
+              href: link.href,
+              text: link.text,
+              file: filePath,
+              status: response.status,
+              ok: response.status >= 200 && response.status < 300 ? 'ok' : 'fail'
+            }))
+            .catch(error => ({
+              href: link.href,
+              text: link.text,
+              file: filePath,
+              status: error.response ? error.response.status : 'unknown',
+              ok: 'fail'
+            }));
+}
+
+// Función para contar los links
+function countLinks(links, options) {
+  const uniqueLinks = new Set();
+  
+  if (options.validate && options.stats){
+    let brokenLinks = 0;
+    links.forEach(link => {
+      uniqueLinks.add(link.href);
+      if (link.ok === 'fail') {
+        brokenLinks++;
+      }
+    });  
+    return {
+      total: links.length,
+      unique: uniqueLinks.size,
+      broken: brokenLinks
+    };
+  } else if (!options.validate && options.stats) {  
+      links.forEach(link => {
+        uniqueLinks.add(link.href);
+      });
+
+      return {
+        total: links.length,
+        unique: uniqueLinks.size,
+    };
+  }
 }
 
 // Se exporta la función mdLinks para que pueda ser utilizada desde otro archivo.
-export { mdLinks };
+export { 
+  extractLinksFromDirectory,
+  extractLinksFromFile,
+  validateLinks,
+  countLinks
+ };
