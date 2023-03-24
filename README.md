@@ -3,7 +3,7 @@ Este es un módulo de Node.js que analiza archivos Markdown y devuelve los links
 
 ## Instalación
 Para instalar el módulo, ejecuta el siguiente comando:
-***npm install <MarianaAgudeloO>/md-links*** 
+***npm install MarianaAgudeloO/DEV005-md-links*** 
 
 ## Uso desde la línea de comandos
 Puedes usar el módulo desde la línea de comandos ejecutando el siguiente comando:
@@ -26,8 +26,8 @@ Puedes usar el módulo desde la línea de comandos ejecutando el siguiente coman
 
 ## Uso desde una aplicación Node.js
 También puedes usar el módulo desde una aplicación Node.js. Para ello, importa la función mdLinks desde el módulo y llámala con los parámetros correspondientes:
-- *const mdLinks = require('<github-user>/md-links').mdLinks;* **//Usando CommonJS**
-- *import { mdLinks } from '<github-user>/md-links';* **//Usando ES Modules**
+- *const mdLinks = require('MarianaAgudeloO/DEV005-md-links').mdLinks;* **//Usando CommonJS**
+- *import { mdLinks } from 'MarianaAgudeloO/DEV005-md-links';* **//Usando ES Modules**
 
 **Ejemplo: **
 
