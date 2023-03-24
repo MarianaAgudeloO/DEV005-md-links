@@ -65,23 +65,26 @@ function extractLinksFromDirectory(directoryPath, validate) {
 
 //Validar el estado de los links encontrados
 function validateLinks(link, filePath){
-
+  // Máximo 50 caracteres en el texto 
+  const text = link.text.length > 50 ? link.text.substring(0, 50) : link.text;
+  
   return axios.head(link.href)
-            .then(response => ({
-              href: link.href,
-              text: link.text,
-              file: filePath,
-              status: response.status,
-              ok: response.status >= 200 && response.status < 300 ? 'ok' : 'fail'
-            }))
-            .catch(error => ({
-              href: link.href,
-              text: link.text,
-              file: filePath,
-              status: error.response ? error.response.status : 'unknown',
-              ok: 'fail'
-            }));
-}
+  .then(response => ({
+  href: link.href,
+  text: text,
+  file: filePath,
+  status: response.status,
+  ok: response.status >= 200 && response.status < 300 ? 'ok' : 'fail'
+  }))
+  .catch(error => ({
+  href: link.href,
+  text: text,
+  file: filePath,
+  status: error.response ? error.response.status : 'unknown',
+  ok: 'fail'
+  }));
+  
+  }
 
 // Función para contar los links
 function countLinks(links, options) {
@@ -104,7 +107,6 @@ function countLinks(links, options) {
       links.forEach(link => {
         uniqueLinks.add(link.href);
       });
-
       return {
         total: links.length,
         unique: uniqueLinks.size,

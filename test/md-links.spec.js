@@ -72,7 +72,6 @@ describe('extractLinksFromFile', () => {
       expect(links.length).toEqual(2);
     });
   });
-  
 });
 
 //Test para verificar que la extracción de los links de todos los archivos dentro de directorios y subdirectorios, se ejecute correctamente 
@@ -122,7 +121,7 @@ describe('mdLinks', () => {
         expect(links[0]).not.toHaveProperty('ok');
       });
   });
-  it('debe lanzar un error si se proporciona una ruta inválida', () => {
+  it('Debe lanzar un error si se proporciona una ruta inválida', () => {
     const invalidPath = './thumb.png';
     return expect(mdLinks(invalidPath)).rejects.toThrow('La ruta debe ser un archivo Markdown o un directorio.');
   });
@@ -191,6 +190,7 @@ describe('validateLinks', () => {
         expect(result).toHaveProperty('status');
         expect(result).toHaveProperty('ok');
       });
+      
   });
 
 it('Debe arrojar la propiedad ok como "ok" si el link funciona', () => {
@@ -206,6 +206,8 @@ it('Debe arrojar la propiedad ok como "ok" si el link funciona', () => {
       });
   });
 
+  
+
   it('Debe arrojar la propiedad ok como "fail" si el link no funciona', () => {
     const link = {
       href: 'https://www.otroejemplo.com',
@@ -219,5 +221,7 @@ it('Debe arrojar la propiedad ok como "ok" si el link funciona', () => {
       });
   });
 });
+
+
 
 
