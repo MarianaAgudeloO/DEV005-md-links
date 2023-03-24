@@ -43,7 +43,7 @@ function extractLinksFromFile(filePath, options) {
 }
 
 // Se recibe como argumento la ruta de un directorio y se encarga de extraer todos los enlaces presentes en los archivos Markdown.
-function extractLinksFromDirectory(directoryPath, validate) {
+function extractLinksFromDirectory(directoryPath, options) {
   return fs.readdir(directoryPath)
     .then(files => {
       const promises = files.map(file => {
@@ -51,9 +51,9 @@ function extractLinksFromDirectory(directoryPath, validate) {
         return fs.stat(filePath)
           .then(stats => {
             if (stats.isDirectory()) {
-              return extractLinksFromDirectory(filePath, validate);
+              return extractLinksFromDirectory(filePath, options);
             } else if (stats.isFile() && path.extname(file) === '.md') {
-              return extractLinksFromFile(filePath, validate);
+              return extractLinksFromFile(filePath, options);
             } else {
               return Promise.resolve([]);
             }
