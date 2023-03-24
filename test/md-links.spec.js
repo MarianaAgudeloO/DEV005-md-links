@@ -76,7 +76,7 @@ describe('extractLinksFromFile', () => {
 
 //Test para verificar que la extracción de los links de todos los archivos dentro de directorios y subdirectorios, se ejecute correctamente 
 describe('extractLinksFromDirectory', () => {
-  test('Debe retornar un arreglo con los links de todos los archivos', () => {
+  it('Debe retornar un arreglo con los links de todos los archivos', () => {
     const directoryPath = './test/test-directory';
     const expectedLinks = [
       {
@@ -107,7 +107,7 @@ describe('extractLinksFromDirectory', () => {
 describe('mdLinks', () => {
   it('debe retornar un array de objetos con los links encontrados en un archivo Markdown', () => {
     const options = {
-      validate: false,
+      validate: false
     };
     return mdLinks(filePath, options)
       .then(links => {
@@ -142,6 +142,21 @@ describe('mdLinks', () => {
         expect(Array.isArray(links)).toBe(true);
         expect(links.length).toBeGreaterThan(0);
       });
+  });
+  it('Debería retornar una promesa que resuelve a un array de objetos', () => {
+    const options = {validate: false};
+    const result = mdLinks(filePath, options);
+
+    return expect(result).resolves.toBeInstanceOf(Array); // Verificar que se retorna un array de objetos
+  });
+  it('Debería retornar un array de objetos de links cuando se ingresa la ruta de un directorio', () => {
+    const options = {validate: false};
+    const filePath = './test/test-directory/';
+
+    return mdLinks(filePath, options).then(links => {
+      expect(links).toBeInstanceOf(Array);
+      expect(links.length).toBeGreaterThan(0);
+    });
   });
 });
 
@@ -221,7 +236,6 @@ it('Debe arrojar la propiedad ok como "ok" si el link funciona', () => {
       });
   });
 });
-
 
 
 
