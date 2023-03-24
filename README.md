@@ -26,8 +26,11 @@ Puedes usar el módulo desde la línea de comandos ejecutando el siguiente coman
 
 ## Uso desde una aplicación Node.js
 También puedes usar el módulo desde una aplicación Node.js. Para ello, importa la función mdLinks desde el módulo y llámala con los parámetros correspondientes:
-*const mdLinks = require('<github-user>/md-links').mdLinks;* **//Usando CommonJS**
-*import { mdLinks } from '<github-user>/md-links';* **//Usando ES Modules**
+- *const mdLinks = require('<github-user>/md-links').mdLinks;* **//Usando CommonJS**
+- *import { mdLinks } from '<github-user>/md-links';* **//Usando ES Modules**
+
+**Ejemplo: **
+
 *mdLinks('<path-to-file-or-directory>', { validate: true, stats: true })
 .then(links => {
   console.log(links);
